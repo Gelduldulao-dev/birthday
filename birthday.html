@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Happy Birthday!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink-bg:#FFE9F1; --pink-card:#FFFFFF; --pink-soft:#FFD1E3;
+  --pink-hot:#FF4D80; --pink-deep:#E23763; --gold:#FFC94D;
+  --ink:#3B2A33; --ink-soft:#8A6E79; --shadow: 0 10px 30px rgba(226,55,99,.18);
+  --radius: 22px;
+}
+:root:not([data-theme="light"]) { }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --pink-bg:#2B1620; --pink-card:#3A2029; --pink-soft:#4B2733;
+    --pink-hot:#FF6699; --pink-deep:#FF8FAE; --gold:#FFD873;
+    --ink:#FBEFF3; --ink-soft:#D9AFC0; --shadow: 0 10px 30px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --pink-bg:#2B1620; --pink-card:#3A2029; --pink-soft:#4B2733;
+  --pink-hot:#FF6699; --pink-deep:#FF8FAE; --gold:#FFD873;
+  --ink:#FBEFF3; --ink-soft:#D9AFC0; --shadow: 0 10px 30px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box;}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+body{
+  margin:0; min-height:100%; background:var(--pink-bg); color:var(--ink);
+  font-family:'Nunito',sans-serif; -webkit-font-smoothing:antialiased;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  overflow-x:hidden;
+}
+h1,h2,h3{font-family:'Baloo 2',cursive; margin:0;}
+button{font-family:inherit;}
+
+/* ---------- decorative kitty mark (original mascot, not a copyrighted logo) ---------- */
+.kitty{width:86px;height:64px;margin:0 auto 14px;position:relative;}
+.kitty .ear{position:absolute;top:0;width:30px;height:30px;background:var(--pink-card);border-radius:50% 50% 0 0;border:3px solid var(--ink);}
+.kitty .ear.l{left:2px;transform:rotate(-18deg);}
+.kitty .ear.r{right:2px;transform:rotate(18deg);}
+.kitty .face{position:absolute;top:14px;left:8px;right:8px;height:44px;background:var(--pink-card);border:3px solid var(--ink);border-radius:46% 46% 50% 50%;}
+.kitty .eye{position:absolute;top:28px;width:5px;height:5px;background:var(--ink);border-radius:50%;}
+.kitty .eye.l{left:24px;} .kitty .eye.r{right:24px;}
+.kitty .whisk{position:absolute;top:38px;width:16px;height:2px;background:var(--ink-soft);border-radius:2px;}
+.kitty .whisk.l1{left:-8px;top:34px;} .kitty .whisk.l2{left:-8px;top:39px;}
+.kitty .whisk.r1{right:-8px;top:34px;} .kitty .whisk.r2{right:-8px;top:39px;}
+.kitty .bow{position:absolute;top:-6px;left:52px;width:22px;height:14px;}
+.kitty .bow::before,.kitty .bow::after{content:"";position:absolute;top:0;width:11px;height:14px;background:var(--pink-hot);border:2px solid var(--ink);}
+.kitty .bow::before{left:0;border-radius:0 60% 60% 0;}
+.kitty .bow::after{right:0;border-radius:60% 0 0 60%;}
+
+/* ---------- login screen ---------- */
+#login-screen{
+  min-height:100vh; min-height:100dvh; display:flex; align-items:center; justify-content:center; padding:24px;
+}
+.login-card{
+  background:var(--pink-card); border-radius:calc(var(--radius) + 6px); box-shadow:var(--shadow);
+  padding:40px 32px; width:100%; max-width:360px; text-align:center;
+}
+.login-card h1{font-size:1.5rem; color:var(--pink-deep); margin-bottom:4px;}
+.login-card p{color:var(--ink-soft); font-size:.92rem; margin:0 0 22px;}
+.login-card input{
+  width:100%; padding:13px 16px; margin-bottom:12px; border-radius:14px; border:2px solid var(--pink-soft);
+  background:var(--pink-bg); color:var(--ink); font-size:1rem; text-align:center; outline:none;
+}
+.login-card input:focus{border-color:var(--pink-hot);}
+.login-card button{
+  width:100%; padding:13px; border:none; border-radius:14px; background:var(--pink-hot); color:#fff;
+  font-weight:700; font-size:1rem; cursor:pointer; transition:transform .15s ease, background .15s ease;
+}
+.login-card button:hover{background:var(--pink-deep);}
+.login-card button:active{transform:scale(.97);}
+.login-card button:focus-visible, .login-card input:focus-visible{outline:3px solid var(--gold); outline-offset:2px;}
+#login-error{color:var(--pink-deep); font-size:.85rem; height:18px; margin-top:2px;}
+.shake{animation:shake .4s;}
+@keyframes shake{25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
+@media (prefers-reduced-motion:reduce){.shake{animation:none;}}
+
+/* ---------- app shell ---------- */
+#app{display:none; min-height:100vh; min-height:100dvh;}
+header.top{
+  position:sticky; top:0; padding-top:env(safe-area-inset-top,0px); z-index:10;
+  background:var(--pink-card); box-shadow:0 2px 14px rgba(0,0,0,.06);
+}
+.top-inner{max-width:760px; margin:0 auto; padding:14px 18px 0;}
+.top-inner h1{font-size:1.2rem; color:var(--pink-deep);}
+nav{display:flex; gap:6px; max-width:760px; margin:10px auto 0; padding:0 12px; overflow-x:auto;}
+nav button{
+  flex:1; min-width:82px; border:none; background:transparent; color:var(--ink-soft);
+  padding:12px 8px; font-weight:700; font-size:.86rem; border-bottom:3px solid transparent; cursor:pointer;
+}
+nav button.active{color:var(--pink-hot); border-bottom-color:var(--pink-hot);}
+main{max-width:760px; margin:0 auto; padding:26px 18px 60px;}
+.view{display:none;}
+.view.active{display:block; animation:rise .35s ease;}
+@keyframes rise{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+@media (prefers-reduced-motion:reduce){.view.active{animation:none;}}
+
+.card{background:var(--pink-card); border-radius:var(--radius); padding:26px; box-shadow:var(--shadow); margin-bottom:18px;}
+
+/* Home */
+.hero{text-align:center; padding:30px 10px 10px;}
+.hero h2{font-size:2rem; color:var(--pink-deep); line-height:1.25;}
+.hero p{color:var(--ink-soft); margin-top:10px; font-size:1.02rem;}
+.pill-row{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:20px;}
+.pill{background:var(--pink-soft); color:var(--pink-deep); padding:8px 16px; border-radius:999px; font-weight:700; font-size:.85rem;}
+
+/* Gallery */
+.grid{display:grid; grid-template-columns:repeat(2,1fr); gap:14px;}
+@media (min-width:520px){.grid{grid-template-columns:repeat(3,1fr);}}
+.photo{
+  aspect-ratio:1; border-radius:16px; overflow:hidden; position:relative;
+  background:linear-gradient(135deg,var(--pink-soft),var(--pink-bg));
+  display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+.photo img{width:100%;height:100%;object-fit:cover;display:block;}
+.photo .cap{position:absolute; bottom:0; left:0; right:0; background:rgba(59,42,51,.55); color:#fff;
+  font-size:.72rem; padding:6px 8px; text-align:center;}
+
+/* Letter */
+.letter{font-size:1.02rem; line-height:1.75; white-space:pre-wrap;}
+.signoff{margin-top:18px; text-align:right; color:var(--pink-deep); font-family:'Baloo 2',cursive; font-size:1.1rem;}
+
+/* Book a date */
+.chip-row{display:flex; flex-wrap:wrap; gap:10px; margin:14px 0 20px;}
+.chip{border:2px solid var(--pink-soft); background:transparent; color:var(--ink); padding:9px 14px;
+  border-radius:999px; cursor:pointer; font-weight:700; font-size:.85rem;}
+.chip.sel{background:var(--pink-hot); border-color:var(--pink-hot); color:#fff;}
+label{display:block; font-weight:700; font-size:.85rem; color:var(--ink-soft); margin:14px 0 6px;}
+input[type=date]{
+  width:100%; padding:12px 14px; border-radius:12px; border:2px solid var(--pink-soft);
+  background:var(--pink-bg); color:var(--ink); font-size:1rem;
+}
+.book-btn{
+  margin-top:20px; width:100%; padding:14px; border:none; border-radius:14px;
+  background:var(--pink-hot); color:#fff; font-weight:800; font-size:1rem; cursor:pointer;
+}
+.book-btn:hover{background:var(--pink-deep);}
+#confirm{display:none; text-align:center; margin-top:16px; color:var(--pink-deep); font-weight:700;}
+
+.confetti{position:fixed; inset:0; pointer-events:none; z-index:99;}
+.confetti span{position:absolute; top:-20px; font-size:20px; animation:fall linear forwards;}
+@keyframes fall{to{transform:translateY(110vh) rotate(300deg); opacity:.9;}}
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<section id="login-screen">
+  <div class="login-card">
+    <div class="kitty">
+      <div class="bow"></div>
+      <div class="ear l"></div><div class="ear r"></div>
+      <div class="face"></div>
+      <div class="eye l"></div><div class="eye r"></div>
+      <div class="whisk l1"></div><div class="whisk l2"></div>
+      <div class="whisk r1"></div><div class="whisk r2"></div>
+    </div>
+    <h1>HAPPY BIRTHDAY BEBI 💌</h1>
+    <p>Type your full name and our secret word to unlock it</p>
+    <input id="name-input" type="text" placeholder="Your name" autocomplete="off">
+    <input id="pass-input" type="password" placeholder="Secret word" autocomplete="off">
+    <button id="login-btn">Unlock ✨</button>
+    <div id="login-error"></div>
+  </div>
+</section>
+
+<!-- ============ APP ============ -->
+<div id="app">
+  <header class="top">
+    <div class="top-inner"><h1 id="greet-title">Happy Birthday!</h1></div>
+    <nav>
+      <button data-view="home" class="active">Home</button>
+      <button data-view="gallery">Gallery</button>
+      <button data-view="letter">Letter</button>
+      <button data-view="book">Book a Date</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HOME -->
+    <section class="view active" id="view-home">
+      <div class="card hero">
+        <h2 id="hero-name">Happy Birthday, my</h2>
+        <p id="hero-sub">Today the whole world gets to celebrate the person who makes every day softer and sweeter.</p>
+        <div class="pill-row">
+          <span class="pill">🎀 Made just for you</span>
+          <span class="pill">🎂 10/01/2026</span>
+          <span class="pill">💗 From your bebi gel </span>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--pink-deep);margin-bottom:8px;">What's inside</h3>
+        <p style="color:var(--ink-soft);margin:0;">Peek at our favorite moments in the Gallery, read a little letter written for you, and pick our next date together — all wrapped up in your favorite shade of pink.</p>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="view" id="view-gallery">
+      <div class="card">
+        <h3 style="color:var(--pink-deep);margin-bottom:14px;">Our favorite moments</h3>
+        <div class="grid" id="gallery-grid"></div>
+        <p style="color:var(--ink-soft);font-size:.82rem;margin-top:14px;">
+          
+        </p>
+      </div>
+    </section>
+
+    <!-- LETTER -->
+    <section class="view" id="view-letter">
+      <div class="card">
+        <h3 style="color:var(--pink-deep);margin-bottom:14px;">A little letter</h3>
+        <p class="letter" id="letter-text"></p>
+        <div class="signoff" id="letter-signoff">— Bebi Gel</div>
+      </div>
+    </section>
+
+    <!-- BOOK A DATE -->
+    <section class="view" id="view-book">
+      <div class="card">
+        <h3 style="color:var(--pink-deep);margin-bottom:6px;">Book our next date</h3>
+        <p style="color:var(--ink-soft);margin:0 0 4px;">Pick what sounds fun, choose a day, and it's a date.</p>
+        <label>Pick an idea</label>
+        <div class="chip-row" id="idea-chips"></div>
+        <label>Pick a day</label>
+        <input type="date" id="date-input">
+        <button class="book-btn" id="book-btn">Confirm our date 💕</button>
+        <div id="confirm"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+/* ================= EDIT ME: personalize your gift here ================= */
+const CONFIG = {
+  herName: "MY BEBI",
+  secretWord: "iloveyou",       // what she types to unlock the site
+  heroSub: "Wishing you a year ahead full of blessings, good health, and endless joy.So grateful to have you in my life. Hope you have the happiest of birthdays today. May this new chapter bring you everything you've been dreaming of ",
+  letter: `Happy birthday!
+
+"Una sa lahat ginawa ko ang web-site na to to show my love and effort for you. I hope you enjoy it.",
+    "Happy birth-day bebi tumatanda ka na sana isabay mo na rin yung maturity mo sa age mo wag na masyong mag paka isip bata makisabay ka na sa agos ng totoong buhay dahil thats the reality
+    lagi mong tandaan yung mga advice ko sayo bout handle life,money, also for our relationship, alam ko na lagi tayong nag aaway
+    pero sana maiwasan na natin yung mga gawaing hindi tama para satin katulad ng walang privacy sa pananakit or mga pag hawak ng matutulis na bagay 
+    mag aaway tayo pero sana hindi tayo mag papahiya sa harpa ng maraming tao or public place, mag aaway tayo pero sana walang mamatay dahil sa karahasang pamamaraan Naniniwala ako na hindi na mang yayari ulit
+    yung mga bagay nayan and sana matutunan mo na umiwas or iwanan yung mga bagay na pwedeng makasira sa relasyon natin hindi lang tao or lalake pweng babae din pamilya,friends,bagay,lugar,ect nag kakaintindihan ba tayo? kung oo Lets get meried jk.",
+    "I love you so much alam mo yan kung gaano kita ka mahal wag mo pabayaan sarili mo stay healthy and wealth Iloveyou bebi and again HAPPY BIRTHDAY!"
+
+Here's to another year of us, and to all the little dates we haven't had yet.`,
+  signoff: "— Bebi Gel",
+  galleryCaptions: ["Our first date", "Firts movie date", "Your favorite pose", "Best trip ever", "Just us", "Graduation day"],
+  dateIdeas: ["Mall date", "Dinner date", "Surprise", "Picnic", "Arcade night", "Gift"]
+};
+/* ========================================================================= */
+
+document.getElementById('greet-title').textContent = "Happy Birthday, " + CONFIG.herName.split(" ")[0] + "!";
+document.getElementById('hero-name').textContent = "Happy Birthday, " + CONFIG.herName + "!";
+document.getElementById('hero-sub').textContent = CONFIG.heroSub;
+document.getElementById('letter-text').textContent = CONFIG.letter;
+document.getElementById('letter-signoff').textContent = CONFIG.signoff;
+
+// gallery placeholders
+const galleryGrid = document.getElementById('gallery-grid');
+
+const photos = [
+  'una.jpg',
+  'dalawa.jpg',
+  'tatlo.jpg',
+  'apat.jpg',
+  'lima.jpg',
+  'anim.jpg'
+];
+
+CONFIG.galleryCaptions.forEach((cap, i) => {
+  const d = document.createElement('div');
+  d.className = 'photo';
+
+  d.innerHTML = `
+    <img src="${photos[i]}" alt="${cap}">
+    <span class="cap">${cap}</span>
+  `;
+
+  galleryGrid.appendChild(d);
+});
+
+// date idea chips
+let selectedIdea = null;
+const chipRow = document.getElementById('idea-chips');
+CONFIG.dateIdeas.forEach(idea=>{
+  const b = document.createElement('button');
+  b.className = 'chip'; b.type='button'; b.textContent = idea;
+  b.addEventListener('click', ()=>{
+    document.querySelectorAll('.chip').forEach(c=>c.classList.remove('sel'));
+    b.classList.add('sel'); selectedIdea = idea;
+  });
+  chipRow.appendChild(b);
+});
+
+document.getElementById('book-btn').addEventListener('click', ()=>{
+  const date = document.getElementById('date-input').value;
+  const confirmBox = document.getElementById('confirm');
+  if(!selectedIdea || !date){
+    confirmBox.style.display='block';
+    confirmBox.textContent = "Pick an idea and a day first 🎀";
+    return;
+  }
+  const pretty = new Date(date+'T00:00:00').toLocaleDateString(undefined,{weekday:'long', month:'long', day:'numeric'});
+  confirmBox.style.display='block';
+  confirmBox.textContent = "It's a date! " + selectedIdea + " on " + pretty + " 💕";
+  try{
+    localStorage.setItem('bday-site-booked-date', JSON.stringify({idea:selectedIdea, date}));
+  }catch(e){}
+  launchConfetti();
+});
+
+// restore a previously booked date, if any
+try{
+  const saved = JSON.parse(localStorage.getItem('bday-site-booked-date'));
+  if(saved){
+    setTimeout(()=>{
+      document.getElementById('date-input').value = saved.date;
+      const chip = [...document.querySelectorAll('.chip')].find(c=>c.textContent===saved.idea);
+      if(chip){ chip.classList.add('sel'); selectedIdea = saved.idea; }
+    },0);
+  }
+}catch(e){}
+
+// nav switching
+document.querySelectorAll('nav button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('view-'+btn.dataset.view).classList.add('active');
+  });
+});
+
+// login
+function launchConfetti(){
+  const wrap = document.createElement('div');
+  wrap.className = 'confetti';
+  const emojis = ['🎀','💗','✨','🎂','🩷'];
+  for(let i=0;i<26;i++){
+    const s = document.createElement('span');
+    s.textContent = emojis[i % emojis.length];
+    s.style.left = Math.random()*100+'vw';
+    s.style.animationDuration = (2.5+Math.random()*1.8)+'s';
+    s.style.animationDelay = (Math.random()*0.6)+'s';
+    wrap.appendChild(s);
+  }
+  document.body.appendChild(wrap);
+  setTimeout(()=>wrap.remove(), 4600);
+}
+
+function tryLogin(){
+  const name = document.getElementById('name-input').value.trim();
+  const pass = document.getElementById('pass-input').value.trim();
+  const err = document.getElementById('login-error');
+  if(!name || pass.toLowerCase() !== CONFIG.secretWord.toLowerCase()){
+    err.textContent = "Hmm, that's not quite right 🎀";
+    const card = document.querySelector('.login-card');
+    card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+    return;
+  }
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  launchConfetti();
+  try{ sessionStorage.setItem('bday-site-logged-in','1'); }catch(e){}
+}
+document.getElementById('login-btn').addEventListener('click', tryLogin);
+document.getElementById('pass-input').addEventListener('keydown', e=>{ if(e.key==='Enter') tryLogin(); });
+
+try{
+  if(sessionStorage.getItem('bday-site-logged-in')==='1'){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app').style.display='block';
+  }
+}catch(e){}
+</script>
+</body>
+</html>
